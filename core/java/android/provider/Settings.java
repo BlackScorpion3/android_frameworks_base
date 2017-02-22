@@ -3706,6 +3706,23 @@ public final class Settings {
          */
         public static final String BLUETOOTH_SHOW_BATTERY = "bluetooth_show_battery";
 
+        /**
+         * Whether to show statusbar clock in the keyguard
+         * @hide
+         */
+        public static final String KEYGUARD_SHOW_CLOCK = "keyguard_show_clock";
+        
+       /**
+         * Hide lockscreen date
+         * @hide
+         */
+        public static final String HIDE_LOCKSCREEN_DATE = "hide_lockscreen_date";
+
+        /**
+         * Hide lockscreen clock
+         * @hide
+         */
+        public static final String HIDE_LOCKSCREEN_CLOCK = "hide_lockscreen_clock";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
