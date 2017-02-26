@@ -19,9 +19,15 @@ package com.android.keyguard;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.graphics.PorterDuff.Mode;
+import android.graphics.Typeface;
 import android.os.UserHandle;
+import android.provider.AlarmClock;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
@@ -31,11 +37,14 @@ import android.util.Slog;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.TextClock;
 import android.widget.TextView;
 
 import com.android.internal.widget.LockPatternUtils;
 
+import java.util.Date;
+import java.text.NumberFormat;
 import java.util.Locale;
 
 public class KeyguardStatusView extends GridLayout {
@@ -48,7 +57,12 @@ public class KeyguardStatusView extends GridLayout {
     private TextView mAlarmStatusView;
     private TextClock mDateView;
     private TextClock mClockView;
+    private TextView mAmbientDisplayBatteryView;
     private TextView mOwnerInfo;
+
+    private final int mWarningColor = 0xfff4511e; // deep orange 600
+    private int mIconColor;
+    private int mPrimaryTextColor;
 
     private KeyguardUpdateMonitorCallback mInfoCallback = new KeyguardUpdateMonitorCallback() {
 
@@ -129,11 +143,6 @@ public class KeyguardStatusView extends GridLayout {
         mClockView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                 getResources().getDimensionPixelSize(R.dimen.widget_big_font_size));
         mClockView.setTypeface(Typeface.create("sans-serif", Typeface.NORMAL));
-        // Some layouts like burmese have a different margin for the clock
-        MarginLayoutParams layoutParams = (MarginLayoutParams) mClockView.getLayoutParams();
-        layoutParams.bottomMargin = getResources().getDimensionPixelSize(
-                R.dimen.bottom_text_spacing_digital);
-        mClockView.setLayoutParams(layoutParams);
         mDateView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                 getResources().getDimensionPixelSize(R.dimen.widget_label_font_size));
         mOwnerInfo.setTextSize(TypedValue.COMPLEX_UNIT_PX,
@@ -293,6 +302,8 @@ public class KeyguardStatusView extends GridLayout {
         if (lockClockFont == 11) {
             mClockView.setTypeface(Typeface.create("sans-serif-medium", Typeface.ITALIC));
         }
+    }
+
 
     // DateFormat.getBestDateTimePattern is extremely expensive, and refresh is called often.
     // This is an optimization to ensure we only recompute the patterns when the inputs change.
@@ -312,13 +323,8 @@ public class KeyguardStatusView extends GridLayout {
             final String clockView24Skel = res.getString(R.string.clock_24hr_format);
             final String key = locale.toString() + dateViewSkel + clockView12Skel + clockView24Skel;
             if (key.equals(cacheKey)) return;
-            if (res.getBoolean(com.android.internal.R.bool.config_dateformat)) {
-                final String dateformat = Settings.System.getString(context.getContentResolver(),
-                        Settings.System.DATE_FORMAT);
-                dateView = dateformat;
-            } else {
-                dateView = DateFormat.getBestDateTimePattern(locale, dateViewSkel);
-            }
+
+            dateView = DateFormat.getBestDateTimePattern(locale, dateViewSkel);
 
             clockView12 = DateFormat.getBestDateTimePattern(locale, clockView12Skel);
             if(!context.getResources().getBoolean(R.bool.config_showAmpm)){
