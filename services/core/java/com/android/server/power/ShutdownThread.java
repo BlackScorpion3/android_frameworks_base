@@ -69,7 +69,7 @@ import java.io.IOException;
 
 import java.lang.reflect.Method;
 
-import com.android.internal.util.rr.Helpers;
+import com.android.internal.util.king.Helpers;
 
 public final class ShutdownThread extends Thread {
     // constants

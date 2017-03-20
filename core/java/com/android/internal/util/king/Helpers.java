@@ -1,4 +1,4 @@
-package com.android.internal.util.rr;
+package com.android.internal.util.king;
 
 import android.app.ActivityManagerNative;
 import android.app.IActivityManager;
