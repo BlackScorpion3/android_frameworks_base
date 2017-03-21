@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2013-2015 RR
+* Copyright (C) 2017 King Rom
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-package com.android.internal.util.rr;
+package com.android.internal.util.king;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
